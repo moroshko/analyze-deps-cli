@@ -10,7 +10,7 @@
   "scripts": {
     "lint": "eslint index.js test",
     "test": "nyc mocha test",
-    "build": "npm run lint && npm test",
+    "build": "npm run lint",
     "preversion": "npm run build",
     "postversion": "git push && git push --tags"
   },
