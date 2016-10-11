@@ -72,4 +72,13 @@ package       current  latest
 package-json  1.2.0    2.4.0   major
 semver        ~5.2.0   5.3.0   minor`
   ));
+
+  it('should output that everything is ok when all packages are up to date', () =>
+    expectSuccess('all-latest', `
+Analyzing test/mocks/all-latest/package.json
+
+dependencies ✔
+
+devDependencies ✔`
+  ));
 });

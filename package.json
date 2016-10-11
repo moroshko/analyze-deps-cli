@@ -61,10 +61,10 @@
     "latest"
   ],
   "nyc": {
-    "statements": 93,
-    "branches": 91,
+    "statements": 96,
+    "branches": 95,
     "functions": 91,
-    "lines": 93,
+    "lines": 96,
     "include": [
       "index.js"
     ],
