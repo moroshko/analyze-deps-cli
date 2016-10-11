@@ -14,6 +14,8 @@ npm install -g analyze-deps-cli
 deps
 ```
 
+![deps output](deps-output.png)
+
 ## License
 
 [MIT](http://moroshko.mit-license.org)
