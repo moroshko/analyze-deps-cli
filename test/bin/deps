@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+
+const mock = require('mock-require');
+
+mock('analyze-deps', '../analyze-deps-mock');
+
+require('../../index');

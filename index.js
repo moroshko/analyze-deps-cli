@@ -6,6 +6,7 @@ const minimist = require('minimist');
 const stripAnsi = require('strip-ansi');
 const sortBy = require('lodash.sortby');
 const fileExists = require('file-exists');
+const logSymbols = require('log-symbols');
 const analyzeDeps = require('analyze-deps');
 
 const printError = message => {
@@ -24,7 +25,7 @@ if (specifiedPackageJsonLocation) {
   packageJsonPath = path.resolve(specifiedPackageJsonLocation, 'package.json');
 
   if (!fileExists(packageJsonPath)) {
-    printErrorAndExit(`${packageJsonPath} doesn't exist`);
+    printErrorAndExit(`${path.relative(process.cwd(), packageJsonPath)} doesn't exist`);
   }
 } else {
   const findNearestFile = require('find-nearest-file');
@@ -93,7 +94,7 @@ const printAnalysis = analysis =>
     );
 
     if (errors.length === 0 && notLatest.length === 0) {
-      console.log(`\n${key} ${chalk.green.bold('✓')}`); // eslint-disable-line no-console
+      console.log(`\n${key} ${logSymbols.success}`); // eslint-disable-line no-console
       return;
     }
 
