@@ -10,7 +10,7 @@
   "scripts": {
     "lint": "eslint index.js test",
     "test": "nyc mocha test",
-    "build": "npm run lint",
+    "build": "npm run lint && npm test",
     "preversion": "npm run build",
     "postversion": "git push && git push --tags"
   },
@@ -61,10 +61,10 @@
     "latest"
   ],
   "nyc": {
-    "lines": 100,
-    "statements": 100,
-    "functions": 100,
-    "branches": 100,
+    "statements": 81,
+    "branches": 58,
+    "functions": 91,
+    "lines": 80,
     "include": [
       "index.js"
     ],
