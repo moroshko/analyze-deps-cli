@@ -1,6 +1,6 @@
 {
   "name": "analyze-deps-cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Compare dependencies in package.json to the latest available versions.",
   "repository": {
     "type": "git",
