@@ -81,4 +81,10 @@ dependencies ✔
 
 devDependencies ✔`
   ));
+
+  it('should output an error when package range is invalid', () =>
+    expectSuccess('error', `
+Analyzing test/mocks/error/package.json
+ERROR: Package \`semver\` doesn't have versions in range ^4.4.0. Latest version is 5.3.0.`
+  ));
 });

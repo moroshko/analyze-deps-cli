@@ -98,6 +98,10 @@ const printAnalysis = analysis =>
       return;
     }
 
+    if (notLatest.length === 0) {
+      return;
+    }
+
     const rows = [headers].concat(notLatest.map(packageName => [
       packageName,
       singleAnalysis[packageName].current,
