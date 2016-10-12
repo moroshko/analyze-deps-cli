@@ -18,7 +18,7 @@
     "deps": "./bin/deps"
   },
   "dependencies": {
-    "analyze-deps": "^1.0.0",
+    "analyze-deps": "^1.0.1",
     "chalk": "^1.1.3",
     "file-exists": "^2.0.0",
     "find-nearest-file": "^1.0.0",
