@@ -21,6 +21,22 @@ deps
 
 ![deps output](deps-output.png)
 
+## Description
+
+`deps` simply outputs the packages which version range specified in `package.json` can be updated to include the latest version only.
+
+By default, `deps` will analyze `package.json` found in `./`, the directory where `deps` is run. If not found, it will try `../`, then `../../` and so on.
+
+You can also specify the `package.json` location like this:
+
+```shell
+deps -p some/other/location
+```
+
+## Related
+
+* [analyze-deps](https://github.com/moroshko/analyze-deps) - API for this module
+
 ## License
 
 [MIT](http://moroshko.mit-license.org)
