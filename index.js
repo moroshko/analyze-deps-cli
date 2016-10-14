@@ -37,7 +37,7 @@ if (specifiedPackageJsonLocation) {
   }
 }
 
-console.log(chalk.magenta(`Analyzing ${path.relative(process.cwd(), packageJsonPath)}`)); // eslint-disable-line no-console
+console.log(chalk.magenta(`Analyzing ${path.relative(process.cwd(), packageJsonPath)}\n`)); // eslint-disable-line no-console
 
 const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
 
@@ -66,7 +66,7 @@ const colorizeDiff = diff =>
   diffColorMap[diff] ? chalk[diffColorMap[diff]](diff) : diff;
 
 const showErrors = analysis => {
-  let notLatest = {};
+  let errorsCount = 0, notLatest = {};
 
   for (let depKey in analysis) {
     const deps = analysis[depKey];
@@ -79,30 +79,43 @@ const showErrors = analysis => {
 
       if (status === 'error') {
         printError(packageAnalysis.error);
+        errorsCount++;
       } else if (status === 'not-latest') {
         notLatest[depKey][packageName] = packageAnalysis;
       }
     }
   }
 
-  return notLatest;
+  if (errorsCount > 0) {
+    console.log(); // eslint-disable-line no-console
+  }
+
+  return {
+    errorsCount: errorsCount,
+    notLatest: notLatest
+  };
 };
 
 const headerMap = {
-  dependencies: 'dep',
-  devDependencies: 'devDep'
+  dependencies: 'dependency',
+  devDependencies: 'devDependency'
 };
 
-const showPrompt = notLatest => {
-  let rows = [], headerIndices = {};
+const separator = str => new inquirer.Separator(chalk.reset(str));
+const header = str => chalk.reset(str);
+
+const showPrompt = data => {
+  const errorsCount = data.errorsCount;
+  const notLatest = data.notLatest;
+  let rows = [], headerIndices = {}, keysMap = [];
 
   for (let key in notLatest) {
     const deps = notLatest[key];
-    const header = [
-      chalk.reset(chalk.cyan.underline.bold(headerMap[key])),
-      chalk.reset(chalk.red.underline.bold('current')),
-      chalk.reset(chalk.green.underline.bold('latest')),
-      ''
+    const head = [
+      header(chalk.cyan.underline.bold(headerMap[key])),
+      header(chalk.red.underline.bold('current')),
+      header(chalk.green.underline.bold('latest')),
+      header('')
     ];
     const body = sortBy(Object.keys(deps), packageName => getSortKey(deps[packageName]))
       .map(packageName => {
@@ -117,37 +130,47 @@ const showPrompt = notLatest => {
       });
 
     headerIndices[rows.length] = true;
-    rows = rows.concat([header], body);
+    keysMap = keysMap.concat('header', (new Array(body.length)).fill(key));
+    rows = rows.concat([head], body);
   }
 
-  rows = table(rows, { stringLength: calcColoredStringLength });
+  const tableRows = table(rows, { stringLength: calcColoredStringLength });
 
-  const choices = rows.split('\n').map((row, index) => {
+  const choices = tableRows.split('\n').reduce((result, row, index) => {
     if (headerIndices[index]) {
-      return new inquirer.Separator(`  ${row}`);
+      result.push(separator(' '));
+      result.push(separator(`  ${row}`));
+    } else {
+      const packageName = rows[index][0];
+
+      result.push({
+        name: row,
+        value: {
+          key: keysMap[index],
+          packageName: packageName
+        },
+        short: packageName // will be displayed once the selection is finished
+      });
     }
 
-    return {
-      name: row,
-      value: {
-        key: 'todo',
-        packageName: 'todo'
-      },
-      short: 'todo'
-    };
-  });
+    return result;
+  }, []).concat(
+    separator(' '),
+    separator(`Press ${chalk.green('Space')} to select, ${chalk.green('Enter')} to finish, or ${chalk.green('⌘-C')} to cancel.`)
+  );
   const question = {
     type: 'checkbox',
-    message: 'Select packages to update',
+    message: 'Select dependencies to update in package.json\n\n ',
     name: 'updates',
-    choices: choices
+    choices: choices,
+    pageSize: process.stdout.rows - errorsCount - 4
   };
 
   return inquirer.prompt([question]);
 };
 
 const updatePackageJson = selection => {
-  return selection;
+  console.log(selection);
 };
 
 analyzeDeps(packageJson)
