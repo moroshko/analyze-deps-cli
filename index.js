@@ -40,8 +40,10 @@ if (specifiedPackageJsonLocation) {
 console.log(chalk.magenta(`Analyzing ${path.relative(process.cwd(), packageJsonPath)}\n`)); // eslint-disable-line no-console
 
 const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+const successChar = chalk.stripColor(logSymbols.success);
 
-const calcColoredStringLength = str => chalk.stripColor(str).length;
+const calcColoredStringLength = str =>
+  chalk.stripColor(str).endsWith(successChar) ? 0 : chalk.stripColor(str).length;
 
 const getSortKey = analysis => {
   switch (analysis.diff) {
@@ -66,7 +68,7 @@ const colorizeDiff = diff =>
   diffColorMap[diff] ? chalk[diffColorMap[diff]](diff) : diff;
 
 const showErrors = analysis => {
-  let errorsCount = 0, notLatest = {};
+  let errorsCount = 0, notLatestExist = false, notLatest = {};
 
   for (let depKey in analysis) {
     const deps = analysis[depKey];
@@ -82,6 +84,7 @@ const showErrors = analysis => {
         errorsCount++;
       } else if (status === 'not-latest') {
         notLatest[depKey][packageName] = packageAnalysis;
+        notLatestExist = true;
       }
     }
   }
@@ -92,6 +95,7 @@ const showErrors = analysis => {
 
   return {
     errorsCount: errorsCount,
+    notLatestExist: notLatestExist,
     notLatest: notLatest
   };
 };
@@ -103,6 +107,11 @@ const headerMap = {
 
 const separator = str => new inquirer.Separator(chalk.reset(str));
 const header = str => chalk.reset(str);
+const successMessage = key => `${key} ${logSymbols.success}`;
+
+const updatePackageJson = updates => {
+  console.log(updates); // eslint-disable-line no-console
+};
 
 const showPrompt = data => {
   const errorsCount = data.errorsCount;
@@ -111,13 +120,16 @@ const showPrompt = data => {
 
   for (let key in notLatest) {
     const deps = notLatest[key];
-    const head = [
+    const packageNames = Object.keys(deps);
+    const head = packageNames.length === 0 ? [
+      header(successMessage(key))
+    ] : [
       header(chalk.cyan.underline.bold(headerMap[key])),
       header(chalk.red.underline.bold('current')),
       header(chalk.green.underline.bold('latest')),
       header('')
     ];
-    const body = sortBy(Object.keys(deps), packageName => getSortKey(deps[packageName]))
+    const body = sortBy(packageNames, packageName => getSortKey(deps[packageName]))
       .map(packageName => {
         const analysis = deps[packageName];
 
@@ -166,17 +178,29 @@ const showPrompt = data => {
     pageSize: process.stdout.rows - errorsCount - 4
   };
 
-  return inquirer.prompt([question]);
+  return inquirer.prompt([question])
+    .then(result => {
+      if (result.updates.length === 0) {
+        console.log(chalk.magenta('\npackage.json didn\'t change')); // eslint-disable-line no-console
+      } else {
+        updatePackageJson(result.updates);
+      }
+    });
 };
 
-const updatePackageJson = selection => {
-  console.log(selection);
+const showAllGood = data => {
+  const notLatest = data.notLatest;
+  let first = true;
+
+  for (let key in notLatest) {
+    console.log(`${first ? '' : '\n'}${successMessage(key)}`); // eslint-disable-line no-console
+    first = false;
+  }
 };
 
 analyzeDeps(packageJson)
   .then(showErrors)
-  .then(showPrompt)
-  .then(updatePackageJson);
+  .then(result => result.notLatestExist ? showPrompt(result) : showAllGood(result));
 
 /*
 const printAnalysis = analysis =>
