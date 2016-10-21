@@ -8,7 +8,7 @@
   },
   "author": "Misha Moroshko <michael.moroshko@gmail.com>",
   "scripts": {
-    "lint": "eslint src test index.js",
+    "lint": "eslint src test",
     "test": "nyc mocha test",
     "build": "npm run lint && npm test",
     "preversion": "npm run build",
@@ -39,7 +39,7 @@
     "nyc": "^8.3.2"
   },
   "files": [
-    "index.js",
+    "src",
     "bin"
   ],
   "keywords": [
