@@ -37,7 +37,9 @@ if (specifiedPackageJsonLocation) {
   }
 }
 
-console.log(chalk.magenta(`Analyzing ${path.relative(process.cwd(), packageJsonPath)}\n`)); // eslint-disable-line no-console
+const packageJsonRelativePath = path.relative(process.cwd(), packageJsonPath);
+
+console.log(chalk.magenta(`Analyzing ${packageJsonRelativePath}\n`)); // eslint-disable-line no-console
 
 const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
 const successChar = chalk.stripColor(logSymbols.success);
@@ -65,7 +67,7 @@ const diffColorMap = {
 };
 
 const colorizeDiff = diff =>
-  diffColorMap[diff] ? chalk[diffColorMap[diff]](diff) : diff;
+  diffColorMap[diff] ? chalk[diffColorMap[diff]](diff) : (diff || '');
 
 const showErrors = analysis => {
   let errorsCount = 0, notLatestExist = false, notLatest = {};
@@ -111,6 +113,11 @@ const successMessage = key => `${key} ${logSymbols.success}`;
 
 const updatePackageJson = updates => {
   console.log(updates); // eslint-disable-line no-console
+  // const newPackageJson = updates.reduce((result, update) => {
+  //   packageJson[]
+  // }, packageJson);
+
+  // console.log(newPackageJson); // eslint-disable-line no-console
 };
 
 const showPrompt = data => {
@@ -147,19 +154,22 @@ const showPrompt = data => {
   }
 
   const tableRows = table(rows, { stringLength: calcColoredStringLength });
-
   const choices = tableRows.split('\n').reduce((result, row, index) => {
     if (headerIndices[index]) {
       result.push(separator(' '));
       result.push(separator(`  ${row}`));
     } else {
+      const key = keysMap[index];
       const packageName = rows[index][0];
+      const analysis = notLatest[key][packageName];
+      const latestRange = analysis.latestRange;
 
       result.push({
         name: row,
         value: {
-          key: keysMap[index],
-          packageName: packageName
+          key: key,
+          packageName: packageName,
+          latestRange: latestRange
         },
         short: packageName // will be displayed once the selection is finished
       });
@@ -181,7 +191,7 @@ const showPrompt = data => {
   return inquirer.prompt([question])
     .then(result => {
       if (result.updates.length === 0) {
-        console.log(chalk.magenta('\npackage.json didn\'t change')); // eslint-disable-line no-console
+        console.log(chalk.magenta(`\n${packageJsonRelativePath} didn't change`)); // eslint-disable-line no-console
       } else {
         updatePackageJson(result.updates);
       }

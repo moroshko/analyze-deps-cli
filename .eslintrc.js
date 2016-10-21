@@ -15,7 +15,7 @@ module.exports = {
     'comma-style': [2, 'last'],
     'eol-last': 2,
     'func-call-spacing': 2,
-    'indent': ['error', 2, { SwitchCase: 1, MemberExpression: 1 }],
+    'indent': [2, 2, { SwitchCase: 1, MemberExpression: 1 }],
     'key-spacing': [2, { beforeColon: false, afterColon: true }],
     'keyword-spacing': 2,
     'linebreak-style': [2, 'unix'],
