@@ -66,7 +66,7 @@
     "functions": 100,
     "lines": 98,
     "include": [
-      "index.js"
+      "src/*.js"
     ],
     "exclude": [
       "test/**/*.js"

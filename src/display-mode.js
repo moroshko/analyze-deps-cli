@@ -25,7 +25,8 @@ const displayMode = analysis => {
     const depsExist = singleAnalysis && Object.keys(singleAnalysis).length > 0;
 
     if (!depsExist) {
-      return;
+      console.log(`${maybeNewLine}No ${key} found`); // eslint-disable-line no-console
+      continue;
     }
 
     const packageNames = sortBy(Object.keys(singleAnalysis), packageName =>
