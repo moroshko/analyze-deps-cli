@@ -13,8 +13,8 @@ const separator = str => new inquirer.Separator(chalk.reset(str));
 const header = str => chalk.reset(str);
 const successMessage = key => `${key} ${logSymbols.success}`;
 
-const updatePackageJson = updates => {
-  console.log(updates); // eslint-disable-line no-console
+const updatePackageJson = data => {
+  console.log(data); // eslint-disable-line no-console
   // const newPackageJson = updates.reduce((result, update) => {
   //   packageJson[]
   //   return result;
@@ -28,7 +28,7 @@ const headerMap = {
   devDependencies: 'devDependency'
 };
 
-const showPrompt = (data, packageJsonRelativePath) => {
+const showPrompt = data => {
   const errorsCount = data.errorsCount;
   const notLatest = data.notLatest;
   let rows = [], headerIndices = {}, keysMap = [];
@@ -96,14 +96,7 @@ const showPrompt = (data, packageJsonRelativePath) => {
     pageSize: process.stdout.rows - errorsCount - 4
   };
 
-  return inquirer.prompt([question])
-    .then(result => {
-      if (result.updates.length === 0) {
-        console.log(chalk.magenta(`\n${packageJsonRelativePath} didn't change`)); // eslint-disable-line no-console
-      } else {
-        updatePackageJson(result.updates);
-      }
-    });
+  return inquirer.prompt([question]);
 };
 
 const showAllGood = data => {
@@ -152,7 +145,17 @@ const showErrors = analysis => {
 const interactiveMode = data =>
   showErrors(data.analysis)
     .then(result => result.notLatestExist ?
-      showPrompt(result, data.packageJsonRelativePath) :
+      showPrompt(result)
+        .then(result => {
+          if (result.updates.length === 0) {
+            console.log(chalk.magenta(`\n${data.packageJson.relativePath} didn't change`)); // eslint-disable-line no-console
+          } else {
+            updatePackageJson({
+              updates: result.updates,
+              packageJson: data.packageJson
+            });
+          }
+        }) :
       showAllGood(result)
     );
 

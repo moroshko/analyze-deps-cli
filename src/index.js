@@ -45,7 +45,11 @@ analyzeDeps(packageJson)
   .then(analysis => isInteractive ?
     interactiveMode({
       analysis: analysis,
-      packageJsonRelativePath: packageJsonRelativePath
+      packageJson: {
+        content: packageJson,
+        path: packageJsonPath,
+        relativePath: packageJsonRelativePath
+      }
     }) :
     displayMode(analysis)
   );
