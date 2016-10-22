@@ -1,3 +1,4 @@
+const fs = require('fs');
 const chalk = require('chalk');
 const table = require('text-table');
 const sortBy = require('lodash.sortby');
@@ -13,14 +14,26 @@ const separator = str => new inquirer.Separator(chalk.reset(str));
 const header = str => chalk.reset(str);
 const successMessage = key => `${key} ${logSymbols.success}`;
 
+// Note: this function mutates `data.packageJson.content`
 const updatePackageJson = data => {
-  console.log(data); // eslint-disable-line no-console
-  // const newPackageJson = updates.reduce((result, update) => {
-  //   packageJson[]
-  //   return result;
-  // }, packageJson);
+  let rows = [];
+  const newPackageJson = data.updates.reduce((result, update) => {
+    rows.push([
+      `  ${update.packageName}`,
+      result[update.key][update.packageName],
+      ' \u279d ',
+      update.latestRange
+    ]);
+    result[update.key][update.packageName] = update.latestRange;
+    return result;
+  }, data.packageJson.content);
 
-  // console.log(newPackageJson); // eslint-disable-line no-console
+  fs.writeFileSync(data.packageJson.path, `${JSON.stringify(newPackageJson, null, 2)}\n`);
+
+  const tableStr = table(rows, { stringLength: calcColoredStringLength });
+
+  console.log(`\n${tableStr}`); // eslint-disable-line no-console
+  console.log(chalk.magenta(`\nSuccessfully updated ${data.packageJson.relativePath}`)); // eslint-disable-line no-console
 };
 
 const headerMap = {
@@ -148,7 +161,7 @@ const interactiveMode = data =>
       showPrompt(result)
         .then(result => {
           if (result.updates.length === 0) {
-            console.log(chalk.magenta(`\n${data.packageJson.relativePath} didn't change`)); // eslint-disable-line no-console
+            console.log(chalk.magenta(`\nDid not change ${data.packageJson.relativePath}`)); // eslint-disable-line no-console
           } else {
             updatePackageJson({
               updates: result.updates,
