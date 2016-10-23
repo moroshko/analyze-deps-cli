@@ -1,5 +1,6 @@
 node_modules
+npm-debug.log*
 coverage
 .nyc_output
-npm-debug.log*
+test/temp-output.json
 yarn.lock

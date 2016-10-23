@@ -48,7 +48,8 @@ analyzeDeps(packageJson)
       packageJson: {
         content: packageJson,
         path: packageJsonPath,
-        relativePath: packageJsonRelativePath
+        relativePath: packageJsonRelativePath,
+        outputPath: args.o // For testing only
       }
     }) :
     displayMode(analysis)

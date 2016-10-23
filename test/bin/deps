@@ -2,6 +2,7 @@
 
 const mock = require('mock-require');
 
-mock('analyze-deps', '../analyze-deps-mock');
+mock('analyze-deps', '../mocks/analyze-deps-mock');
+mock('find-nearest-file', '../mocks/find-nearest-file-mock');
 
 require('../../bin/deps');

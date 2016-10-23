@@ -1,9 +1,6 @@
 const chai = require('chai');
 const expect = chai.expect;
-const chaiAsPromised = require('chai-as-promised');
 const execa = require('execa');
-
-chai.use(chaiAsPromised);
 
 const getArguments = mockName =>
   mockName ? ['-p', `./test/mocks/${mockName}`] : [];
@@ -32,7 +29,7 @@ const expectError = (mockName, output) =>
     exitCode: 1
   });
 
-describe('analyze-deps-cli', () => {
+describe('display mode', () => {
   it('should output an error if there is no package.json in the specified location', () =>
     expectError('no-package-json', `
 ERROR: test/mocks/no-package-json/package.json doesn't exist`
@@ -40,7 +37,7 @@ ERROR: test/mocks/no-package-json/package.json doesn't exist`
 
   it('should find and analyze package.json', () =>
     expectSuccess(null, `
-Analyzing package.json
+Analyzing test/mocks/default/package.json
 
 package  current        latest
 rxjs     5.0.0-beta.12  5.0.0-rc.1  prerelease

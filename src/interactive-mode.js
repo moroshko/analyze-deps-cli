@@ -28,7 +28,7 @@ const updatePackageJson = data => {
     return result;
   }, data.packageJson.content);
 
-  fs.writeFileSync(data.packageJson.path, `${JSON.stringify(newPackageJson, null, 2)}\n`);
+  fs.writeFileSync(data.packageJson.outputPath || data.packageJson.path, `${JSON.stringify(newPackageJson, null, 2)}\n`);
 
   const tableStr = table(rows, { stringLength: calcColoredStringLength });
 
@@ -101,12 +101,13 @@ const showPrompt = data => {
     separator(' '),
     separator(`Press ${chalk.green('Space')} to select, ${chalk.green('Enter')} to finish, or ${chalk.green('⌘-C')} to cancel.`)
   );
+
   const question = {
     type: 'checkbox',
     message: 'Select dependencies to update in package.json\n\n ',
     name: 'updates',
     choices: choices,
-    pageSize: process.stdout.rows - errorsCount - 4
+    pageSize: (process.stdout.rows || 9999) - errorsCount - 4 // In testing, `process.stdout.rows` is undefined
   };
 
   return inquirer.prompt([question]);
