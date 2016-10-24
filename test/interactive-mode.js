@@ -83,22 +83,10 @@ ERROR: I don't know how to update \`selenium-webdriver\` range ^2.53.3 to includ
  Press Space to select, Enter to finish, or ⌘-C to cancel.
 
 Did not change test/mocks/default/package.json`,
-    null)
+      null
+    )
   );
-/*
-{
-  "name": "has-latest",
-  "dependencies": {
-    "lodash.mapvalues": "^4.6.0",
-    "package-json": "^1.2.0",
-    "promise-all": "^1.0.0",
-    "semver": "^5.2.0"
-  },
-  "devDependencies": {
-    "eslint": "^3.7.0"
-  }
-}
-*/
+
   it('should update the selected packages in package.json', () =>
     expectSuccess('has-latest', [SPACE, DOWN, DOWN, SPACE, ENTER], null, `
 {
@@ -114,6 +102,17 @@ Did not change test/mocks/default/package.json`,
   }
 }
 `
+    )
+  );
+
+  it('should output that everything is ok when all packages are up to date', () =>
+    expectSuccess('all-latest', null, `
+Analyzing test/mocks/all-latest/package.json
+
+dependencies ✔
+
+devDependencies ✔`,
+      null
     )
   );
 });
