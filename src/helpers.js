@@ -32,9 +32,15 @@ const getSortKey = analysis => {
   }
 };
 
+const headerMap = {
+  dependencies: 'dependency',
+  devDependencies: 'devDependency'
+};
+
 module.exports = {
   printError: printError,
   calcColoredStringLength: calcColoredStringLength,
   colorizeDiff: colorizeDiff,
-  getSortKey: getSortKey
+  getSortKey: getSortKey,
+  headerMap: headerMap
 };

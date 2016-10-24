@@ -9,6 +9,7 @@ const printError = helpers.printError;
 const calcColoredStringLength = helpers.calcColoredStringLength;
 const colorizeDiff = helpers.colorizeDiff;
 const getSortKey = helpers.getSortKey;
+const headerMap = helpers.headerMap;
 
 const separator = str => new inquirer.Separator(chalk.reset(str));
 const header = str => chalk.reset(str);
@@ -36,11 +37,6 @@ const updatePackageJson = data => {
   console.log(chalk.magenta(`\nSuccessfully updated ${data.packageJson.relativePath}`)); // eslint-disable-line no-console
 };
 
-const headerMap = {
-  dependencies: 'dependency',
-  devDependencies: 'devDependency'
-};
-
 const showPrompt = data => {
   const errorsCount = data.errorsCount;
   const notLatest = data.notLatest;
@@ -52,9 +48,9 @@ const showPrompt = data => {
     const head = packageNames.length === 0 ? [
       header(successMessage(key))
     ] : [
-      header(chalk.cyan.underline.bold(headerMap[key])),
-      header(chalk.red.underline.bold('current')),
-      header(chalk.green.underline.bold('latest')),
+      header(chalk.cyan.underline(headerMap[key])),
+      header(chalk.red.underline('current')),
+      header(chalk.green.underline('latest')),
       header('')
     ];
     const body = sortBy(packageNames, packageName => getSortKey(deps[packageName]))

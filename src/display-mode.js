@@ -7,13 +7,7 @@ const printError = helpers.printError;
 const calcColoredStringLength = helpers.calcColoredStringLength;
 const colorizeDiff = helpers.colorizeDiff;
 const getSortKey = helpers.getSortKey;
-
-const headers = [
-  chalk.cyan.underline('package'),
-  chalk.red.underline('current'),
-  chalk.green.underline('latest'),
-  ''
-];
+const headerMap = helpers.headerMap;
 
 const displayMode = analysis => {
   const keys = Object.keys(analysis);
@@ -52,6 +46,12 @@ const displayMode = analysis => {
       continue;
     }
 
+    const headers = [
+      chalk.cyan.underline(headerMap[key]),
+      chalk.red.underline('current'),
+      chalk.green.underline('latest'),
+      ''
+    ];
     const rows = [headers].concat(notLatest.map(packageName => [
       packageName,
       singleAnalysis[packageName].current,

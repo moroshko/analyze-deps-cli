@@ -45,7 +45,7 @@ Analyzing test/mocks/default/package.json
 ERROR: I don't know how to update \`rxjs\` range 5.0.0-beta.12 to include only the latest version 5.0.0-rc.1.
 ERROR: I don't know how to update \`selenium-webdriver\` range ^2.53.3 to include only the latest version 3.0.0-beta-3.
 
-package         current        latest
+devDependency   current        latest
 tslint          ^3.15.0-dev.0  3.15.1  prepatch
 semver          ^5.2.0         5.3.0   minor
 @types/jasmine  ^2.2.22-alpha  2.5.35  preminor`
@@ -56,12 +56,12 @@ semver          ^5.2.0         5.3.0   minor
     expectSuccess('has-latest', `
 Analyzing test/mocks/has-latest/package.json
 
-package       current  latest
+dependency    current  latest
 semver        ^5.2.0   5.3.0   minor
 package-json  ^1.2.0   2.4.0   major
 
-package  current  latest
-eslint   ^3.7.0   3.7.1   patch`
+devDependency  current  latest
+eslint         ^3.7.0   3.7.1   patch`
     )
   );
 
@@ -69,7 +69,7 @@ eslint   ^3.7.0   3.7.1   patch`
     expectSuccess('only-dependencies', `
 Analyzing test/mocks/only-dependencies/package.json
 
-package       current  latest
+dependency    current  latest
 semver        ~5.2.0   5.3.0   minor
 package-json  1.2.0    2.4.0   major`
     )
@@ -79,7 +79,7 @@ package-json  1.2.0    2.4.0   major`
     expectSuccess('empty-devDependencies', `
 Analyzing test/mocks/empty-devDependencies/package.json
 
-package       current  latest
+dependency    current  latest
 semver        ~5.2.0   5.3.0   minor
 package-json  1.2.0    2.4.0   major
 
