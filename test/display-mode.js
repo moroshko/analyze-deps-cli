@@ -56,9 +56,9 @@ semver          ^5.2.0         5.3.0   minor
     expectSuccess('has-latest', `
 Analyzing test/mocks/has-latest/package.json
 
-dependency    current  latest
-semver        ^5.2.0   5.3.0   minor
-package-json  ^1.2.0   2.4.0   major
+dependency     current  latest
+semver         ^5.2.0   5.3.0   minor
+package-json   ^1.2.0   2.4.0   major
 
 devDependency  current  latest
 eslint         ^3.7.0   3.7.1   patch`

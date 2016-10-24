@@ -11,15 +11,27 @@ const headerMap = helpers.headerMap;
 
 const displayMode = analysis => {
   const keys = Object.keys(analysis);
+  let rows = [];
+
+  const addEmptyLine = () => {
+    rows = rows.concat([['']]);
+  };
+
+  const addMessage = message => {
+    if (rows.length > 0) {
+      addEmptyLine();
+    }
+
+    rows = rows.concat([[message]]);
+  };
 
   for (let i = 0, len = keys.length; i < len; i++) {
     const key = keys[i];
-    const maybeNewLine = (i === 0 ? '' : '\n');
     const singleAnalysis = analysis[key];
     const depsExist = singleAnalysis && Object.keys(singleAnalysis).length > 0;
 
     if (!depsExist) {
-      console.log(`${maybeNewLine}No ${key} found`); // eslint-disable-line no-console
+      addMessage(`No ${key} found`);
       continue;
     }
 
@@ -38,7 +50,7 @@ const displayMode = analysis => {
     );
 
     if (errors.length === 0 && notLatest.length === 0) {
-      console.log(`${maybeNewLine}${key} ${logSymbols.success}`); // eslint-disable-line no-console
+      addMessage(`${key} ${logSymbols.success}`);
       continue;
     }
 
@@ -46,22 +58,29 @@ const displayMode = analysis => {
       continue;
     }
 
-    const headers = [
+    const head = [
       chalk.cyan.underline(headerMap[key]),
       chalk.red.underline('current'),
       chalk.green.underline('latest'),
       ''
     ];
-    const rows = [headers].concat(notLatest.map(packageName => [
+    const body = notLatest.map(packageName => [
       packageName,
       singleAnalysis[packageName].current,
       singleAnalysis[packageName].latest,
       colorizeDiff(singleAnalysis[packageName].diff)
-    ]));
-    const tableStr = table(rows, { stringLength: calcColoredStringLength });
+    ]);
 
-    console.log(`${maybeNewLine}${tableStr}`); // eslint-disable-line no-console
+    if (i > 0) {
+      addEmptyLine();
+    }
+
+    rows = rows.concat([head], body);
   }
+
+  const tableStr = table(rows, { stringLength: calcColoredStringLength });
+
+  console.log(tableStr); // eslint-disable-line no-console
 };
 
 module.exports = displayMode;

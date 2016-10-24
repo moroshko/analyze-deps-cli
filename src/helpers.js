@@ -7,8 +7,14 @@ const printError = message => {
 
 const successChar = chalk.stripColor(logSymbols.success);
 
-const calcColoredStringLength = str =>
-  chalk.stripColor(str).endsWith(successChar) ? 0 : chalk.stripColor(str).length;
+const calcColoredStringLength = str => {
+  const rawStr = chalk.stripColor(str);
+
+  // These messages should not influence the layout of the table:
+  //   devDependencies ✔
+  //   No devDependencies found
+  return rawStr.endsWith(successChar) || rawStr.endsWith(' found') ? 0 : chalk.stripColor(str).length;
+};
 
 const diffColorMap = {
   patch: 'green',
