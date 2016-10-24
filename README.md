@@ -41,11 +41,7 @@ deps -i
 
 ![interactive mode](interactive-mode.png)
 
-or, with a specified location:
-
-```shell
-deps -i -p some/other/location
-```
+If you press <kbd>Enter</kbd> after selecting `inquirer`, then `inquirer`'s range in `package.json` will be updated from `^1.2.1` to `^1.2.2`.
 
 ## Related
 
