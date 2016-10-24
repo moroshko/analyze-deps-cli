@@ -1,3 +1,6 @@
 {
-  "name": "error"
+  "name": "error",
+  "dependencies": {
+    "semver": "^4.4.0"
+  }
 }
