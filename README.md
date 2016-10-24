@@ -15,15 +15,15 @@ npm install -g analyze-deps-cli
 
 ## Usage
 
+### Display mode (default)
+
 ```shell
 deps
 ```
 
-![deps output](deps-output.png)
+![display mode](display-mode.png)
 
-## Description
-
-`deps` simply outputs the packages which version range specified in `package.json` can be updated to include the latest version only.
+`deps` simply outputs the packages which version range specified in `package.json` can be updated to include only the latest version.
 
 By default, `deps` will analyze `package.json` found in `./`, the directory where `deps` is run. If not found, it will try `../`, then `../../` and so on.
 
@@ -31,6 +31,20 @@ You can also specify the `package.json` location like this:
 
 ```shell
 deps -p some/other/location
+```
+
+### Interactive mode
+
+```shell
+deps -i
+```
+
+![interactive mode](interactive-mode.png)
+
+or, with a specified location:
+
+```shell
+deps -i -p some/other/location
 ```
 
 ## Related

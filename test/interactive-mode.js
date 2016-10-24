@@ -80,7 +80,7 @@ ERROR: I don't know how to update \`selenium-webdriver\` range ^2.53.3 to includ
  ◯ semver          ^5.2.0         5.3.0   minor
  ◯ @types/jasmine  ^2.2.22-alpha  2.5.35  preminor
 
- Press Space to select, Enter to finish, or ⌘-C to cancel.
+ Press Space to select, Enter to finish, or Control-C to cancel.
 
 Did not change test/mocks/default/package.json`,
       null

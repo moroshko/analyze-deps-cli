@@ -95,7 +95,7 @@ const showPrompt = data => {
     return result;
   }, []).concat(
     separator(' '),
-    separator(`Press ${chalk.green('Space')} to select, ${chalk.green('Enter')} to finish, or ${chalk.green('⌘-C')} to cancel.`)
+    separator(`Press ${chalk.green('Space')} to select, ${chalk.green('Enter')} to finish, or ${chalk.green('Control-C')} to cancel.`)
   );
 
   const question = {
