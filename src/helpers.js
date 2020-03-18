@@ -1,3 +1,4 @@
+const stripAnsi = require('strip-ansi');
 const chalk = require('chalk');
 const logSymbols = require('log-symbols');
 
@@ -5,15 +6,15 @@ const printError = message => {
   console.log(chalk.bgRed(`ERROR: ${message}`)); // eslint-disable-line no-console
 };
 
-const successChar = chalk.stripColor(logSymbols.success);
+const successChar = stripAnsi(logSymbols.success);
 
 const calcColoredStringLength = str => {
-  const rawStr = chalk.stripColor(str);
+  const rawStr = stripAnsi(str);
 
   // These messages should not influence the layout of the table:
   //   devDependencies ✔
   //   No devDependencies found
-  return rawStr.endsWith(successChar) || rawStr.endsWith(' found') ? 0 : chalk.stripColor(str).length;
+  return rawStr.endsWith(successChar) || rawStr.endsWith(' found') ? 0 : stripAnsi(str).length;
 };
 
 const diffColorMap = {
